@@ -596,10 +596,44 @@
       }
     } else if (t === 'tool/call' || t === 'tool/result') {
       addToolEvent(event)
+      updateExploreBanner(event)
       scrollBottom()
     } else if (t === 'session/title') {
       refreshSessions()
     }
+  }
+
+  /** Show/hide the exploration banner based on explore_* tool activity. */
+  function updateExploreBanner(event) {
+    const els2 = {
+      banner: document.getElementById('explore-banner'),
+      text: document.getElementById('explore-text')
+    }
+    if (!els2.banner) return
+    const d = event.data || {}
+    if (event.type === 'tool/call') {
+      const name = d.name || (d.call && d.call.name) || ''
+      if (name.startsWith('explore_')) {
+        els2.banner.hidden = false
+        if (name === 'explore_start') els2.text.textContent = '🧭 探索开始：正在尝试完成你的目标…'
+        else if (name === 'explore_act') els2.text.textContent = '🔍 正在页面操作：' + (extractArgText(d.args || (d.call && d.call.arguments) || {}))
+        else if (name === 'explore_check') els2.text.textContent = '✅ 正在检查目标是否达成…'
+        else if (name === 'explore_ask') els2.text.textContent = '🙋 需要你回答一个问题…'
+        else if (name === 'explore_finish') els2.text.textContent = '🎉 探索完成，正在提炼工作流…'
+      }
+    } else if (event.type === 'tool/result') {
+      const name = (d.call && d.call.name) || (d.name) || ''
+      if (name === 'explore_finish') {
+        els2.banner.hidden = true
+      }
+    }
+  }
+
+  function extractArgText(args) {
+    try {
+      const a = typeof args === 'string' ? JSON.parse(args) : args
+      return (a.textAnchor || a.action || a.selector || JSON.stringify(a).slice(0, 40) || '').slice(0, 40)
+    } catch { return '' }
   }
 
   function extractText(data) {

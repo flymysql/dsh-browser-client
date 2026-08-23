@@ -143,3 +143,17 @@ DSH_BASE=http://127.0.0.1:4101 TOKEN_FILE=test/env/browser-client-token-4101 \
 node test/workflow-store-test.mjs      # 保存/校验/持久化
 node test/workflow-executor-test.mjs   # 执行器全链路（ask/approve/重试）
 ```
+
+## 探索模式（复杂任务的关键能力）
+
+用户需求复杂时，LLM 可能无法一次给出方案。探索模式让 LLM **边操作边学**：
+`explore_start` → 反复 `explore_act`（试错，成功/失败都记录）→ `explore_check` 验证目标 → `explore_finish` 把**验证过的成功路径**提炼成干净的工作流（失败的尝试自动丢弃）。
+
+```bash
+node test/explore-mode-test.mjs   # 探索→提炼→保存 闭环验证
+```
+
+### 面向非研发人员的交互
+- 系统提示词段：LLM 用大白话沟通、复述确认需求、主动引导、失败说人话
+- 面板探索横幅：实时显示"正在尝试… / 需要你回答… / 完成"
+- 场景模板 + 引导式提问，不让普通用户面对空白画布

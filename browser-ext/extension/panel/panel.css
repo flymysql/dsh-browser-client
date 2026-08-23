@@ -186,3 +186,17 @@ body {
 .wf-progress { border-radius: 10px; padding: 10px 12px; font-size: 13px; background: #f0f4ff; color: #4f6ef7; }
 .wf-progress.ok { background: #f0fdf4; color: #16a34a; }
 .wf-progress.fail { background: #fef2f2; color: #dc2626; }
+
+/* ── explore banner ── */
+.explore-banner {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; margin: 0 8px 8px;
+  background: #f0f4ff; border: 1px solid #dbe4ff; border-radius: 10px;
+  font-size: 13px; color: #4f6ef7;
+}
+.explore-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #4f6ef7; flex-shrink: 0;
+  animation: dsh-blink 1s ease-in-out infinite;
+}
+@keyframes dsh-blink { 0%,100% { opacity: 1 } 50% { opacity: .3 } }
