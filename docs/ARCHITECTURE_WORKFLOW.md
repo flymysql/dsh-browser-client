@@ -342,3 +342,13 @@ LLM 与普通用户对话时遵循：
 - 探索模式**状态横幅**（🧭 探索中 → 实时显示当前动作 → 🎉 完成）
 - 确认对话框（ask/approve）已有，探索中求助复用
 - 场景模板 + 引导式提问（不让普通用户面对空白画布）
+
+### 探索模式成熟度增强（v2）
+1. **导航自动补全**：explore_finish 自动为提炼的工作流补上起始 URL 的 `navigate + wait` 前缀（及页面切换处的 navigate），重跑时从正确起点开始；target.urlPattern 自动从起始 URL 推导域名。
+2. **explore_undo 回退**：探索走错路径时可撤销上一步（移除轨迹 + 页面回退），避免在错误路径上堆叠操作。
+3. **客观成功判定**：explore_act 返回操作后页面快照，LLM 对比观察结果判定 success（而非主观臆断）；失败时建议 explore_undo 换路径。
+4. **站点路径记忆**：explore_start 时若当前域名已有验证过的工作流，作为起点提示注入，减少重复探索同一站点的常见路径。
+5. **explore_act 支持 navigate**：探索中导航作为 navigate 步骤记录，参与路径提炼。
+
+### 验证
+`test/explore-mode-test.mjs` 覆盖：导航记录 → 失败丢弃 → 正确路径 → 校验 → 提炼（含 navigate+wait 前缀、URL 推导、成功标准继承）；explore_undo 回退；navigate-only 工作流拒绝。E2E 全通过。
