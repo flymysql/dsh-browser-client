@@ -1,0 +1,27 @@
+# dsh-browser-host bundle patch: the host-side bridge for the DSH Browser
+# Client extension. Insert this bundle into a profile layer stack so the
+# extension can drive this harness from a floating panel in any page.
+#
+# The /api trust fence of the official browser client requires a same-origin
+# caller (Origin must equal the Host header); a browser-extension page
+# (chrome-extension://…) can never satisfy it. This plugin opens a separate
+# token-authenticated surface: /ext-api/* (HTTP RPC proxy over the same
+# apiProxy service the official /api uses) and /ext-events.mux (WebSocket
+# pump of the same events.mux stream). The token is minted at boot and
+# printed in the log (plus written to $DSH_HOME/browser-client-token).
+- insert:
+    - id: dsh-browser-host
+      name: 'dsh-browser-host'
+      config:
+        # Prefix for the extension-facing surface. Keep the default unless the
+        # official /api prefix is customized by a deployment.
+        extPrefix: /ext-api
+        # WS event-stream path (extension-facing).
+        extEventsPath: /ext-events.mux
+        # If false, tokens are minted fresh at boot (no persistence).
+        persistToken: true
+        # Extra CORS origins allowed (exact origin strings, e.g.
+        # 'chrome-extension://abcdef'). The plugin echoes any Origin ending in
+        # '://extension' anyway; these are for dev builds (e.g.
+        # http://localhost:5173).
+        extraOrigins: []

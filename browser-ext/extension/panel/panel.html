@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>DSH Browser Client</title>
+<link rel="stylesheet" href="panel.css">
+</head>
+<body>
+<div id="app">
+  <!-- Header -->
+  <header id="header">
+    <div class="brand">
+      <span class="logo">DSH</span>
+      <div class="titles">
+        <div class="title">DeepSeek Harness</div>
+        <div class="subtitle" id="conn-status">未连接</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="btn-settings" title="设置">⚙</button>
+      <button id="btn-collapse" title="收起">—</button>
+    </div>
+  </header>
+
+  <!-- Workspace bar -->
+  <div id="workspace-bar">
+    <div class="ws-info">
+      <span class="ws-label">工作区</span>
+      <span id="ws-path" class="ws-path">—</span>
+    </div>
+    <button id="btn-bind" class="btn-primary" hidden>绑定工作区</button>
+  </div>
+
+  <!-- Tab bar: 会话 / 工作流 -->
+  <div id="tabs">
+    <button id="tab-chat" class="tab active">会话</button>
+    <button id="tab-workflows" class="tab">工作流</button>
+  </div>
+
+  <!-- Main: session list + chat -->
+  <div id="main">
+    <div id="sessions" class="sessions">
+      <div class="sessions-head">
+        <span>会话</span>
+        <button id="btn-new-session" title="新会话">+</button>
+      </div>
+      <div id="session-list"></div>
+    </div>
+    <div id="chat">
+      <div id="messages"></div>
+      <div id="input-dock">
+        <textarea id="input" rows="1" placeholder="输入消息… (Enter 发送, Shift+Enter 换行)"></textarea>
+        <div class="input-actions">
+          <button id="btn-cancel" hidden>停止</button>
+          <button id="btn-send">发送</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workflows view -->
+  <div id="workflows-view" hidden>
+    <div class="wf-head">
+      <span>已保存的工作流</span>
+      <button id="btn-wf-refresh" title="刷新">↻</button>
+    </div>
+    <div id="wf-list" class="wf-list"></div>
+    <div class="wf-templates-head">
+      <span>场景模板</span>
+      <button id="btn-wf-template" title="从模板创建">+ 模板</button>
+    </div>
+    <div id="wf-templates" class="wf-templates"></div>
+    <div id="wf-progress" class="wf-progress" hidden></div>
+  </div>
+
+  <!-- Settings overlay -->
+  <div id="settings" class="overlay" hidden>
+    <div class="settings-card wide">
+      <h3>设置</h3>
+      <label>Host 地址 <input id="set-base" placeholder="http://127.0.0.1:3080"></label>
+      <label>Token <input id="set-token" type="password" placeholder="browser-client-token 文件内容"></label>
+      <label>当前页面目录 <input id="set-dir" placeholder="例如 /Users/you/work/project"></label>
+      <div class="rules-head">
+        <span>URL → 目录映射规则</span>
+        <button id="btn-add-rule">+</button>
+      </div>
+      <div id="rules-list"></div>
+      <div class="settings-actions">
+        <button id="btn-save" class="btn-primary">保存</button>
+        <button id="btn-close-settings">关闭</button>
+      </div>
+      <p class="hint">Token 在安装了 dsh-browser-host 插件后打印在 dsh 启动日志中，或读取 $DSH_HOME/browser-client-token。<br>规则示例：<code>github.com/foo/* → /Users/you/work/foo</code>（匹配域名前缀 + 路径前缀）</p>
+    </div>
+  </div>
+</div>
+
+<script src="../common/dsh-client.js"></script>
+<script src="panel.js"></script>
+</body>
+</html>

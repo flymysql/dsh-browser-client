@@ -1,0 +1,16 @@
+{
+  "name": "dsh-profile-browser-host-test",
+  "private": true,
+  "dependencies": {
+    "dsh-browser-host": "file:/Users/jimmy/work/demo/dsh-browser-host"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "dsh-browser-host"
+      ]
+    }
+  }
+}

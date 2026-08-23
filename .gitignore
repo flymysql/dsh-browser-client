@@ -1,0 +1,18 @@
+# deps (incl. symlinks)
+node_modules
+
+# macOS
+.DS_Store
+NUL
+
+# test runtime artifacts
+test/env/boot*.log
+test/env/dsh*.pid
+test/env/overlay*.yml
+test/env/browser-client-token*
+test/env/sessions/
+test/env/storages/
+
+# temp
+*.tgz
+*.log
