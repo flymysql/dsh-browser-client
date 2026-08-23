@@ -71,7 +71,33 @@
   async function boot() {
     bindEvents()
     listenPageUrl()
+    setupOnboarding()
     await loadConfig()
+  }
+
+  // ── 新手引导：首次使用显示，常用话术一键填入 ─────────────────────────────
+  async function setupOnboarding() {
+    const ob = document.getElementById('onboarding')
+    if (!ob) return
+    // 只显示一次（记住用户已看过）。
+    try {
+      const seen = await chrome.storage.local.get('dshOnboardingSeen')
+      if (!seen.dshOnboardingSeen) ob.hidden = false
+    } catch { ob.hidden = false }
+    const close = document.getElementById('btn-ob-close')
+    if (close) close.addEventListener('click', async () => {
+      ob.hidden = true
+      try { await chrome.storage.local.set({ dshOnboardingSeen: true }) } catch {}
+    })
+    // 常用话术 chip → 填入输入框并聚焦。
+    ob.querySelectorAll('.ob-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const ph = chip.getAttribute('data-ph') || ''
+        if (ph) { els.input.value = ph; els.input.focus() }
+        ob.hidden = true
+        try { chrome.storage.local.set({ dshOnboardingSeen: true }) } catch {}
+      })
+    })
   }
 
   function bindEvents() {
@@ -607,7 +633,8 @@
   function updateExploreBanner(event) {
     const els2 = {
       banner: document.getElementById('explore-banner'),
-      text: document.getElementById('explore-text')
+      text: document.getElementById('explore-text'),
+      steps: document.getElementById('explore-steps')
     }
     if (!els2.banner) return
     const d = event.data || {}
@@ -615,16 +642,38 @@
       const name = d.name || (d.call && d.call.name) || ''
       if (name.startsWith('explore_')) {
         els2.banner.hidden = false
-        if (name === 'explore_start') els2.text.textContent = '🧭 探索开始：正在尝试完成你的目标…'
-        else if (name === 'explore_act') els2.text.textContent = '🔍 正在页面操作：' + (extractArgText(d.args || (d.call && d.call.arguments) || {}))
-        else if (name === 'explore_check') els2.text.textContent = '✅ 正在检查目标是否达成…'
-        else if (name === 'explore_ask') els2.text.textContent = '🙋 需要你回答一个问题…'
-        else if (name === 'explore_finish') els2.text.textContent = '🎉 探索完成，正在提炼工作流…'
+        if (name === 'explore_start') {
+          els2.text.textContent = '🧭 探索开始：正在尝试完成你的目标…'
+          if (els2.steps) { els2.steps.innerHTML = ''; els2.steps.hidden = true }
+        } else if (name === 'explore_act') {
+          els2.text.textContent = '🔍 正在页面操作：' + (extractArgText(d.args || (d.call && d.call.arguments) || {}))
+        } else if (name === 'explore_check') {
+          els2.text.textContent = '✅ 正在检查目标是否达成…'
+        } else if (name === 'explore_ask') {
+          els2.text.textContent = '🙋 需要你回答一个问题…'
+        } else if (name === 'explore_finish') {
+          els2.text.textContent = '🎉 探索完成，正在提炼工作流…'
+        }
       }
     } else if (event.type === 'tool/result') {
       const name = (d.call && d.call.name) || (d.name) || ''
       if (name === 'explore_finish') {
         els2.banner.hidden = true
+        if (els2.steps) { els2.steps.innerHTML = ''; els2.steps.hidden = true }
+      } else if (name === 'explore_act' && els2.steps) {
+        // 把"已学会的步骤"展示给普通用户看（探索透明）。
+        const res = d.result || d.response || {}
+        const val = res && res.value
+        const note = val && val.note
+        const success = val ? val.success !== false : true
+        if (note) {
+          els2.steps.hidden = false
+          const row = document.createElement('div')
+          row.className = 'explore-step' + (success ? '' : ' fail')
+          row.textContent = (success ? '✓ ' : '✗ ') + note.slice(0, 50)
+          els2.steps.appendChild(row)
+          els2.steps.scrollTop = els2.steps.scrollHeight
+        }
       }
     }
   }

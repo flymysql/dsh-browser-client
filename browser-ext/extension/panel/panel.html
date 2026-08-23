@@ -50,10 +50,28 @@
       <div id="explore-banner" class="explore-banner" hidden>
         <span class="explore-dot"></span>
         <span id="explore-text">🧭 探索中：正在尝试完成你的目标，边试边学…</span>
+        <div id="explore-steps" class="explore-steps" hidden></div>
       </div>
+
+      <!-- 新手引导卡（首次使用或点了帮助时显示） -->
+      <div id="onboarding" class="onboarding" hidden>
+        <div class="ob-head">
+          <span class="ob-title">👋 我能帮你自动化网页上的重复工作</span>
+          <button id="btn-ob-close" class="ob-close" title="关闭">×</button>
+        </div>
+        <div class="ob-body">
+          <p>用大白话告诉我就行，比如：</p>
+          <button class="ob-chip" data-ph="每天把后台订单导到表格里">📋 每天把后台订单导到表格里</button>
+          <button class="ob-chip" data-ph="把这个页面的商品信息都抓下来">🔍 把这个页面的商品信息都抓下来</button>
+          <button class="ob-chip" data-ph="帮我把 A 系统的数据搬到 B 系统">🔄 帮我把 A 系统的数据搬到 B 系统</button>
+          <button class="ob-chip" data-ph="把列表里每一条都点一遍批准">✅ 把列表里每一条都点一遍批准</button>
+          <p class="ob-tip">复杂的事我会先在页面上试，找到对的方法后存成"工作流"，以后一键重跑。</p>
+        </div>
+      </div>
+
       <div id="messages"></div>
       <div id="input-dock">
-        <textarea id="input" rows="1" placeholder="输入消息… (Enter 发送, Shift+Enter 换行)"></textarea>
+        <textarea id="input" rows="1" placeholder="说说你想自动化的重复工作，比如：每天把订单导出来… (Enter 发送)"></textarea>
         <div class="input-actions">
           <button id="btn-cancel" hidden>停止</button>
           <button id="btn-send">发送</button>

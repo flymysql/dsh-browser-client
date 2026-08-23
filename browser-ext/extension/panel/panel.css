@@ -200,3 +200,30 @@ body {
   animation: dsh-blink 1s ease-in-out infinite;
 }
 @keyframes dsh-blink { 0%,100% { opacity: 1 } 50% { opacity: .3 } }
+
+/* ── onboarding 新手引导卡 ── */
+.onboarding {
+  margin: 0 8px 8px; padding: 14px;
+  background: linear-gradient(135deg, #f0f4ff, #f8f5ff);
+  border: 1px solid #dbe4ff; border-radius: 12px;
+}
+.ob-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.ob-title { font-size: 14px; font-weight: 600; color: #1d1d1f; }
+.ob-close { border: none; background: none; font-size: 18px; color: #86868b; cursor: pointer; line-height: 1; }
+.ob-body p { font-size: 13px; color: #4a4a55; margin: 6px 0; }
+.ob-body p.ob-tip { color: #86868b; font-size: 12px; margin-top: 10px; }
+.ob-chip {
+  display: block; width: 100%; text-align: left;
+  background: #fff; border: 1px solid #e0e0ea; border-radius: 8px;
+  padding: 8px 12px; margin: 6px 0; font-size: 13px; color: #1d1d1f;
+  cursor: pointer; transition: border-color .15s;
+}
+.ob-chip:hover { border-color: #4f6ef7; }
+
+/* ── explore steps detail ── */
+.explore-steps {
+  margin-top: 6px; max-height: 80px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.explore-step { font-size: 12px; color: #4f6ef7; padding: 2px 0; }
+.explore-step.fail { color: #dc2626; }
